@@ -33,9 +33,6 @@ class Dino:
 	def forward(self,dist):
 		self.xpos +=dist
 		return self.xpos
-#Gave it a function of backward that lets it go backward in the x direction a specified distance
-	def backward(self,dist):
-		self.xpos -= dist
-		return self.xpos
+
 
 
