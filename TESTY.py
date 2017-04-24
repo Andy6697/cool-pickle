@@ -27,6 +27,31 @@ class Dino(pygame.sprite.Sprite):
         self.image = pygame.Surface([width,height])
         self.image.fill(color)
         self.rect = self.image.get_rect()
+        self.height = 0
+        self.change_x = 0
+        self.change_y = 0
+    def calc_grav(self):
+        if self.change_y == 0:
+             self.change_y = 1
+        else:
+             self.change_y += 5
+
+        if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
+            self.change_y = 0
+            self.rect.y = SCREEN_HEIGHT - self.rect.height
+    def update(self):
+        self.calc_grav() #Gravity
+    def jump(self):
+        self.rect.y -= 40
+        self.height += 40
+    def fall(self):
+        if self.height != 0:
+            self.rect.y +=1
+            self.height -=1
+
+
+
+
 
 
 done = False
@@ -47,6 +72,13 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+            continue
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:
+                dino.jump()
+    dino.fall()
+
+
     screen.fill(WHITE)
 
     for cact in cac_list:
@@ -57,7 +89,6 @@ while not done:
     if len(cac_hit_list) > 0:
         print("YOU SUCK GAME OVER")
         done = True
-           
     pygame.display.flip()
     clock.tick(30)
-pygame.quit()        
+pygame.quit()
