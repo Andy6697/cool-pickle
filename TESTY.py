@@ -49,7 +49,7 @@ while not done:
             done = True
     screen.fill(WHITE)
 
-    for cac in cac_list:
+    for cact in cac_list:
         pygame.draw.rect(screen,GREEN,[cac.rect.x,cac.rect.y,20,20])
         cac.rect.x -= 1
     pygame.draw.rect(screen,BLUE,[dino.rect.x,dino.rect.y,20,20])
