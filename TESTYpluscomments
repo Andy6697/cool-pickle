@@ -20,6 +20,13 @@ font = pygame.font.SysFont('Calibri', 25, True, False)
 pygame.display.set_caption("DINO DASH")
 
 
+
+pygame.mixer.music.load('gameoverzelda.midi')
+pygame.mixer.music.play(-1)
+
+
+
+
 class Cactus(pygame.sprite.Sprite):
     def __init__ (self,color,width,height):
         pygame.sprite.Sprite.__init__(self)
@@ -41,9 +48,7 @@ class Dino(pygame.sprite.Sprite):
         else:
              self.change_y += 5
 
-        if self.rect.y >= SCREEN_HEIGHT - self.rect.height and self.change_y >= 0:
-            self.change_y = 0
-            self.rect.y = SCREEN_HEIGHT - self.rect.height
+
     def update(self):
         self.calc_grav() #Gravity
     def jump(self):
