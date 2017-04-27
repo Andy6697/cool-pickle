@@ -31,6 +31,20 @@ player_image.set_colorkey(WHITE)
 screen.blit(player_image, [80, 600])
 
 
+#for below: Would I put the additional player images here and then add the names (player_jump, player_walk1, 
+#player_walk2, etc.), below in the loop or here?
+
+#player_jump = pygame.image.load("bunny1_jump.png")
+#player_jump.set_colorkey(WHITE)
+
+#player_walk1 = pygame.image.load("bunny1_walk1.png")
+#player_walk2 = pygame.image.load("bunny1_walk2.png")
+#player_walk1.set_colorkey(WHITE)
+#player_walk2.set_colorkey(WHITE)
+
+#screen.blit(player_image, [80, 600])
+
+
 pygame.display.flip()
 
 done = False
@@ -42,8 +56,16 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-
-
+        elif event.type == pygame.KEYDOWN:
+            player_jump = pygame.image.load("bunny1_jump.png")
+                player_jump.set_colorkey(WHITE)
+                screen.blit(player_jump, [80, 470])
+                
+                
+       #Should I incoroporate this would the sprite dino class? 
+        #I also think I'd need help for loop for the walking images 
+        # 
+pygame.display.flip()
 
 
 clock.tick(60)
