@@ -61,6 +61,12 @@ while not done:
                 player_jump.set_colorkey(WHITE)
                 screen.blit(player_jump, [80, 470])
                 
+        #elif event.type == pygame.KEYUP:
+        #    for walk in range (1):
+        #
+        #        screen.blit(player_walk1, [80, 600])
+        #        screen.blit(player_walk2, [80, 600])        
+                
                 
        #Should I incoroporate this would the sprite dino class? 
         #I also think I'd need help for loop for the walking images 
