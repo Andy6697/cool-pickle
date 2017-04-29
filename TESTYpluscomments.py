@@ -12,6 +12,7 @@ BLUE = (0,0,255)
 #Sets up the screen
 size = (1280,809)
 screen = pygame.display.set_mode(size)
+screen.fill(WHITE)
 #Sets up the clock for the tick rate and for the score
 clock = pygame.time.Clock()
 #Sets up an initial score and it's font to prepare for its display on screen
@@ -23,7 +24,7 @@ background_image = pygame.image.load("Mountain_desert.png")
 screen.blit(background_image, [0,0])
 text1 = font.render("Dino Dash", True, WHITE)
 screen.blit(text1, [401, 40])
-pygame.display.flip()
+#pygame.display.flip()
 
 pygame.mixer.music.load('gameoverzelda.midi')
 pygame.mixer.music.play(-1)
@@ -32,12 +33,18 @@ pygame.mixer.music.play(-1)
 
 
 class Cactus(pygame.sprite.Sprite):
-    def __init__ (self,color,width,height):
+    def __init__ (self,width,height, x, y):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.Surface([width,height])
-        self.image.fill(color)
-
+        #self.image = pygame.Surface([width,height])
+        #self.image.fill(color)
+        self.x = x
+        self.y = y
         self.image = pygame.image.load("cactus.png").convert()
+        self.rect = pygame.Rect(self.x, self.y, 117, 160)
+
+        self.image.set_colorkey(WHITE)
+        screen.blit(self.image, [x, y])
+        #pygame.display.flip()
 
         #self.rect = self.image.get_rect()
 class Dino(pygame.sprite.Sprite):
@@ -79,9 +86,12 @@ cac_list = pygame.sprite.Group()
 #Creates 5 cacti with the Cactus class and adds them to the Cac_list for collision detection
 def makethings():
     for i in range(5):
-        cac = Cactus(GREEN,20,20)
+        cac = Cactus(100, 160, 1280, 460)
         cac.rect.x = 700 + random.randrange(700)
         cac.rect.y = 460
+        pygame.display.flip()
+    #    Cactus(117, 160, cac.rect.x, cac.rect.y)
+
         cac_list.add(cac)
 #Creates a dinosaur with the Dino class and sets its initial positions
 dino = Dino(90, 84, 0, 400)
@@ -114,7 +124,9 @@ def run():
         pygame.display.flip()
 #Draws a green, 20x20 cactus in its previously determined x and y position for every cactus in cac_list
         for cac in cac_list:
-            pygame.draw.rect(screen,GREEN,[cac.rect.x,cac.rect.y,20,20])
+            #pygame.draw.rect(screen,GREEN,[cac.rect.x,cac.rect.y,20,20])
+            Cactus(0, 100, cac.rect.x, cac.rect.y)
+
 #Prevents cacti from being too close together. Each cactus goes through
 #the cacxval list and compares its x coordinate with the others to see if they are
 #too close. If it is within 150 pixels of another, the cactus's x value is added to until it isn't.
