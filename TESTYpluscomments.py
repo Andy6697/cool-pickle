@@ -36,9 +36,11 @@ class Cactus(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([width,height])
         self.image.fill(color)
+
+        
         self.rect = self.image.get_rect()
 class Dino(pygame.sprite.Sprite):
-    def  __init__(self,width, height, x, y):
+    def  __init__(self, width, height, x, y):
         pygame.sprite.Sprite.__init__(self)
         #self.image = pygame.Surface([width,height])
         #self.image.fill(color)
@@ -46,7 +48,7 @@ class Dino(pygame.sprite.Sprite):
         self.image = pygame.image.load("Hankk_the_dino.png").convert()
         self.x = x
         self.y = y
-        self.rect = pygame.Rect(self.x, self.y, 20, 20)
+        self.rect = pygame.Rect(self.x, self.y, 100, 84)
         self.height = 0
         self.change_x = 0
         self.change_y = 0
@@ -81,7 +83,7 @@ def makethings():
         cac.rect.y = 460
         cac_list.add(cac)
 #Creates a dinosaur with the Dino class and sets its initial positions
-dino = Dino(20, 20, 0, 400)
+dino = Dino(90, 84, 0, 400)
 dino.rect.x = 0
 dino.rect.y = 400
 
@@ -98,7 +100,7 @@ def run():
                 done = True
 #Allows the player to jump if they press up and if they are on the ground
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP and dino.rect.y == 460:
+                if event.key == pygame.K_UP and dino.rect.y == 400:
                     dino.jump()
         dino.fall()
 #Resets the screen so that it can be updated with the drawings for every loop
@@ -130,7 +132,7 @@ def run():
         cacxval = []
 #draws the dinosaur
         #pygame.draw.rect(screen,BLUE,[dino.rect.x,dino.rect.y,20,20])
-        Dino(20, 20, dino.rect.x, dino.rect.y)
+        Dino(90, 84, dino.rect.x, dino.rect.y)
 #makes a list that is added to everytime the dino collides with a cactus
         cac_hit_list = pygame.sprite.spritecollide(dino,cac_list,True)
 #if the collision list has something in it, (thus there was a collision),
