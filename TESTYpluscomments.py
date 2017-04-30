@@ -69,7 +69,7 @@ class Dino(pygame.sprite.Sprite):
 
     def jump(self):
         if not self.reach:
-            if self.height != 150:
+            if self.height != 250:
                 self.rect.y -= 25
                 self.height += 25
             else: self.reach = True
@@ -144,7 +144,7 @@ def rungame():
             cac.rect.x -= speed
 #When the cacti goes to the end of the screen, reset its position to
 #the end plus a random extra value to have more randomized pattern of cacti appearance.
-            if cac.rect.x < -20:
+            if cac.rect.x < -100:
                 cac.rect.x = 1280 + random.randrange(700)
 #empties the cacxval list so that old cacti that have been reset are not considered
         cacxval = []
