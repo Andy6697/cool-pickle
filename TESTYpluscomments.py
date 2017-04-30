@@ -10,6 +10,7 @@ GREEN = (0,255,0)
 RED = (255,0,0)
 BLUE = (0,0,255)
 #Sets up the screen
+SPEED_FACTOR = 1.1
 size = (1280,809)
 screen = pygame.display.set_mode(size)
 screen.fill(WHITE)
@@ -18,6 +19,8 @@ clock = pygame.time.Clock()
 #Sets up an initial score and it's font to prepare for its display on screen
 score = 0
 font = pygame.font.SysFont('MV Boli', 50, True, False)
+fontgameover = pygame.font.SysFont('Calibri', 50, True, False)
+gameovertext = fontgameover.render("GAME OVER! PRESS LEFT TO RESTART OR DOWN TO QUIT",True,BLACK)
 pygame.display.set_caption("Dino Dash")
 
 background_image = pygame.image.load("Mountain_desert.png")
@@ -56,63 +59,65 @@ class Dino(pygame.sprite.Sprite):
         self.image = pygame.image.load("Hankk_the_dino.png").convert()
         self.x = x
         self.y = y
-        self.rect = pygame.Rect(self.x, self.y, 100, 84)
+#self.rect determines the location stored for the computer to know where you are
+        self.rect = pygame.Rect(self.x, self.y, 80, 84)
         self.height = 0
-        self.change_x = 0
-        self.change_y = 0
+        self.reach = True
 
         self.image.set_colorkey(WHITE)
         screen.blit(self.image, [x, y])
-        pygame.display.flip()
 
-    def calc_grav(self):
-        if self.change_y == 0:
-             self.change_y = 1
-        else:
-             self.change_y += 5
-
-
-    def update(self):
-        self.calc_grav() #Gravity
     def jump(self):
-        self.rect.y -= 50
-        self.height += 50
+        if not self.reach:
+            if self.height != 150:
+                self.rect.y -= 25
+                self.height += 25
+            else: self.reach = True
     def fall(self):
-        if self.height != 0:
-            self.rect.y +=2
-            self.height -=2
+        if self.reach:
+            if self.height != 0:
+                self.rect.y += 25
+                self.height -= 25
+
 #Sets up a group to control all cacti. Cac_list has all of the cacti in it.
 cac_list = pygame.sprite.Group()
 #Creates 5 cacti with the Cactus class and adds them to the Cac_list for collision detection
-def makethings():
+def makecactusgroup():
     for i in range(5):
-        cac = Cactus(100, 160, 1280, 460)
-        cac.rect.x = 700 + random.randrange(700)
-        cac.rect.y = 400
-        pygame.display.flip()
+        xval = 1280 + random.randrange(700)
+        cac = Cactus(100, 160, xval, 420)
     #    Cactus(117, 160, cac.rect.x, cac.rect.y)
 
         cac_list.add(cac)
 #Creates a dinosaur with the Dino class and sets its initial positions
-dino = Dino(90, 84, 0, 400)
-dino.rect.x = 0
-dino.rect.y = 400
+dino = Dino(90, 84, 0, 460)
 
-def run():
-    makethings()
+
+def rungame():
+    highscoreread = open("highscore.txt","r")
+    highscore = int(highscoreread.read())
+    highscoreread.close()
+    initialtime = pygame.time.get_ticks()
+    pygame.sprite.Group.empty(cac_list)
+    makecactusgroup()
 #While done is False, the game contines to run
     done = False
 #Sets up an empty list which will be used to record the x values of the cacti
     cacxval = []
+    speed = 15
+    level = 1
+    score = 0
     while not done:
 #Allows the game to close if the player clicks the X
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
+                return True
 #Allows the player to jump if they press up and if they are on the ground
             elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP and dino.rect.y == 400:
-                    dino.jump()
+                if event.key == pygame.K_UP and dino.rect.y == 460:
+                    dino.reach = False
+        dino.jump()
         dino.fall()
 #Resets the screen so that it can be updated with the drawings for every loop
         screen.fill(WHITE)
@@ -136,11 +141,11 @@ def run():
 #The new xvalue of the cactus is added to the list of cacti xvalues for the next cacti to compare with.
             cacxval += [cac.rect.x]
 #Moves the cacti towards the dino.
-            cac.rect.x -= 6
+            cac.rect.x -= speed
 #When the cacti goes to the end of the screen, reset its position to
 #the end plus a random extra value to have more randomized pattern of cacti appearance.
             if cac.rect.x < -20:
-                cac.rect.x = 700 + random.randrange(700)
+                cac.rect.x = 1280 + random.randrange(700)
 #empties the cacxval list so that old cacti that have been reset are not considered
         cacxval = []
 #draws the dinosaur
@@ -151,19 +156,47 @@ def run():
 #if the collision list has something in it, (thus there was a collision),
 #a game over message prints and the game loop is ended.
         if len(cac_hit_list) > 0:
-            print("YOU SUCK GAME OVER")
+            if score > highscore:
+                highscorewrite = open("highscore.txt","w")
+                highscorewrite.write(str(score))
+                highscorewrite.close()
             done = True
 #Makes a variable for the score, constantly updating with the time
-        score = pygame.time.get_ticks()//100
+        score = (pygame.time.get_ticks()-initialtime)//100
 #Displays the score
+        if level < (score / 25):
+            speed *= SPEED_FACTOR
+            level += 1
         text = font.render("Score: " + str(score),True,BLACK)
+        highscoretext = font.render("High Score: " + str(highscore),True, BLACK)
         screen.blit(text, [840, 40])
+        screen.blit(highscoretext, [800,80])
 #Displays all of the changes made for the dino and cacti every loop
         pygame.display.flip()
 #Loops 30 times a second
         clock.tick(30)
 #closes the game if done = True
-    pygame.quit()
+
 def main():
-    run()
+    close = False
+    while close == False:
+        decision = False
+        if rungame() == True:
+            decision = True
+            close = True
+        while decision == False:
+            screen.blit(gameovertext,[50,200])
+            pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    close = True
+                    decision = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_DOWN:
+                        close = True
+                        decision = True
+                    elif event.key == pygame.K_LEFT:
+                        decision = True
+                    
+    pygame.quit()
 main()
