@@ -126,7 +126,6 @@ def rungame():
         screen.blit(background_image, [0,0])
         text1 = font.render("Dino Dash", True, WHITE)
         screen.blit(text1, [401, 40])
-        pygame.display.flip()
 #Draws a green, 20x20 cactus in its previously determined x and y position for every cactus in cac_list
         for cac in cac_list:
             #pygame.draw.rect(screen,GREEN,[cac.rect.x,cac.rect.y,20,20])
@@ -178,25 +177,25 @@ def rungame():
 #closes the game if done = True
 
 def main():
-    close = False
-    while close == False:
-        decision = False
+    closegame = False
+    while closegame == False:
+        stopendscreen = False
         if rungame() == True:
-            decision = True
-            close = True
-        while decision == False:
+            stopendscreen = True
+            closegame = True
+        while stopendscreen == False:
             screen.blit(gameovertext,[50,200])
             pygame.display.flip()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    close = True
-                    decision = True
+                    closegame = True
+                    stopendscreen = True
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_DOWN:
-                        close = True
-                        decision = True
+                        closegame = True
+                        stopendscreen = True
                     elif event.key == pygame.K_LEFT:
-                        decision = True
+                        stopendscreen = True
                     
     pygame.quit()
 main()
