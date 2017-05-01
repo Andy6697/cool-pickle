@@ -117,6 +117,8 @@ def rungame():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP and dino.rect.y == 460:
                     dino.reach = False
+                    sound.play(jump.wav)
+
         dino.jump()
         dino.fall()
 #Resets the screen so that it can be updated with the drawings for every loop
