@@ -31,6 +31,8 @@ screen.blit(text1, [401, 40])
 
 pygame.mixer.music.load('gameoverzelda.midi')
 pygame.mixer.music.play(-1)
+jump_sound = pygame.mixer.music.load("jump.wav")
+
 
 
 
@@ -117,7 +119,7 @@ def rungame():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP and dino.rect.y == 460:
                     dino.reach = False
-                    sound.play(jump.wav)
+                    jump_sound.play(jump.wav)
 
         dino.jump()
         dino.fall()
