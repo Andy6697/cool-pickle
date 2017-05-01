@@ -60,12 +60,13 @@ def button(msg,x,y,w,h,ic,ac,action=None):
 
 
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
-        pygame.draw.rect(screen, ac,(x,y,w,h))
-    if click[0] == 1 and action != None:
-        action()
-
+        pygame.draw.rect(screen, ac,(x,y,w,h))       
     else:
         pygame.draw.rect(screen, ic, (x,y,w,h))
+
+    if click[0] == 1 and (x+w > mouse[0] > x and y+h > mouse[1] > y) and action != None:
+        action()
+
 
     smallText = pygame.font.Font("freesansbold.ttf",20)
     textSurf, textRect = text_objects(msg,smallText)
@@ -76,9 +77,13 @@ def quitgame():
     pygame.quit()
     quit()
 
-def game_intro():
+intro = True
 
-    intro = True
+def end_intro():
+    global intro
+    intro = False
+
+def game_intro():
 
     while intro:
         for event in pygame.event.get():
@@ -94,7 +99,7 @@ def game_intro():
         screen.blit(TextSurf, TextRect)
 
 
-        button("GO!",150,550,100,50,GREEN,bright_green,rungame)
+        button("GO!",150,550,100,50,GREEN,bright_green,end_intro)
         button("QUIT",550,550,100,50,RED,bright_red,quitgame)
 
 
@@ -227,6 +232,7 @@ def rungame():
                 highscorewrite.write(str(score))
                 highscorewrite.close()
             done = True
+            continue
 #Makes a variable for the score, constantly updating with the time
         score = (pygame.time.get_ticks()-initialtime)//100
 #Displays the score
