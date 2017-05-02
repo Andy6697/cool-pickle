@@ -100,8 +100,8 @@ def game_intro():
         screen.blit(TextSurf, TextRect)
 
 
-        button("GO!",150,550,100,50,GREEN,bright_green,end_intro)
-        button("QUIT",550,550,100,50,RED,bright_red,quitgame)
+        button("GO!",450,550,100,50,GREEN,bright_green,end_intro)
+        button("QUIT",700,550,100,50,RED,bright_red,quitgame)
 
 
         pygame.display.update()
