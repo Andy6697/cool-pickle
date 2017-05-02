@@ -32,7 +32,7 @@ font = pygame.font.SysFont('MV Boli', 50, True, False)
 pygame.display.set_caption("Dino Dash")
 
 background_image = pygame.image.load("Mountain_desert.png")
-screen.blit(pygame.transform.scale(background_image, 1280, 809)
+screen.blit(pygame.transform.scale(background_image, 1280, 809))
 text1 = font.render("Dino Dash", True, WHITE)
 screen.blit(text1, [401, 40])
 #pygame.display.flip()
