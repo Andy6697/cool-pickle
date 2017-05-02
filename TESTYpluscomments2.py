@@ -39,7 +39,7 @@ pygame.mixer.music.play(-1)
 def text_objects(text, font):
     textSurface = font.render(text, True, BLACK)
     return textSurface, textSurface.get_rect()
-
+#displays whatever message is written to the screen
 def message_display(text):
     largeText = pygame.font.Font('freesansbold.ttf',115)
     TextSurf, TextRect = text_objects(text, largeText)
@@ -52,7 +52,7 @@ def message_display(text):
     #it pauses the game for 2 seconds
 
     rungame()
-
+#creates the button's functionality, and keeps track of the mouse position and click, to react like its an actual button
 def button(msg,x,y,w,h,ic,ac,action=None):
 
     mouse = pygame.mouse.get_pos()
@@ -72,17 +72,18 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     textSurf, textRect = text_objects(msg,smallText)
     textRect.center = ( x+(w/2)), (y+(h/2))
     screen.blit(textSurf, textRect)
-
+#quits game 
 def quitgame():
     pygame.quit()
     quit()
-
+#exits the menu display 
 intro = True
 
 def end_intro():
     global intro
     intro = False
-
+#this game intro is the menu itself,creating the button graphics, and show the change in darker ver. of color if hover it
+#also enters into the game itself, and exit menu screen as well as a quit button to exit pygame completely 
 def game_intro():
 
     while intro:
