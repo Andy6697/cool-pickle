@@ -115,7 +115,7 @@ def makecactusgroup():
     """Creates 5 cacti with the Cactus class and adds them to the Cac_list"""
     for i in range(5):
         xval = 1280 + random.randrange(700)
-        cac = Cactus(100, 160, xval, 420)
+        cac = Cactus(100, 160, xval, 460)
         cac_list.add(cac)
 #Creates a dinosaur with the Dino class and sets its initial positions
 dino = Dino(90, 84, 0, 460)
@@ -147,7 +147,6 @@ def rungame():
         dino.jump()
         dino.fall()
         screen.fill(WHITE)
-        background_image = pygame.image.load("Mountain_desert.png")
         screen.blit(background_image, [0,0])
         screen.blit(text1, [401, 40])
         pygame.display.flip()
