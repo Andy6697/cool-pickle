@@ -3,23 +3,14 @@ import pygame
 class Cactus(pygame.sprite.Sprite):
     def __init__ (self,width,height, x, y):
         pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface([width,height])
-        #self.image.fill(color)
         self.x = x
         self.y = y
         self.image = pygame.image.load("cactus.png").convert()
-        self.rect = pygame.Rect(self.x, self.y, 117, 160)
-
-        #self.image.set_colorkey(white)
-        #screen.blit(self.image, [x, y])
-        #pygame.display.flip()
-
-        #self.rect = self.image.get_rect()
+        self.rect = pygame.Rect(self.x, self.y, 60, 84) #the numbers come from the size of the image itself
+        
 class Dino(pygame.sprite.Sprite):
     def  __init__(self, width, height, x, y):
         pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface([width,height])
-        #self.image.fill(color)
 
         self.image = pygame.image.load("Hankk_the_dino.png").convert()
         self.x = x
@@ -28,9 +19,6 @@ class Dino(pygame.sprite.Sprite):
         self.rect = pygame.Rect(self.x, self.y, 80, 84)
         self.height = 0
         self.reach = True
-
-        #self.image.set_colorkey(white)
-        #screen.blit(self.image, [x, y])
 
     def jump(self):
         if not self.reach:
