@@ -31,7 +31,7 @@ background_image = pygame.image.load("Mountain_desert.png")
 screen.blit(background_image, [0,0])
 text1 = font.render("Dino Dash", True, white)
 screen.blit(text1, [401, 40])
-#pygame.display.flip()
+
 
 pygame.mixer.music.load('gameoverzelda.midi')
 pygame.mixer.music.play(-1)
@@ -60,7 +60,7 @@ def button(msg,x,y,w,h,ic,ac,action=None):
 
 
     if x+w > mouse[0] > x and y+h > mouse[1] > y:
-        pygame.draw.rect(screen, ac,(x,y,w,h))       
+        pygame.draw.rect(screen, ac,(x,y,w,h))
     else:
         pygame.draw.rect(screen, ic, (x,y,w,h))
 
@@ -72,18 +72,18 @@ def button(msg,x,y,w,h,ic,ac,action=None):
     textSurf, textRect = text_objects(msg,smallText)
     textRect.center = ( x+(w/2)), (y+(h/2))
     screen.blit(textSurf, textRect)
-#quits game 
+#quits game
 def quitgame():
     pygame.quit()
     quit()
-#exits the menu display 
+#exits the menu display
 intro = True
 
 def end_intro():
     global intro
     intro = False
 #this game intro is the menu itself,creating the button graphics, and show the change in darker ver. of color if hover it
-#also enters into the game itself, and exit menu screen as well as a quit button to exit pygame completely 
+#also enters into the game itself, and exit menu screen as well as a quit button to exit pygame completely
 def game_intro():
 
     while intro:
@@ -110,34 +110,24 @@ def game_intro():
 class Cactus(pygame.sprite.Sprite):
     def __init__ (self,width,height, x, y):
         pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface([width,height])
-        #self.image.fill(color)
+
         self.x = x
         self.y = y
         self.image = pygame.image.load("cactus.png").convert()
-        self.rect = pygame.Rect(self.x, self.y, 117, 160)
+        self.rect = pygame.Rect(self.x, self.y, 61, 84)
 
-        self.image.set_colorkey(white)
-        screen.blit(self.image, [x, y])
-        #pygame.display.flip()
 
-        #self.rect = self.image.get_rect()
 class Dino(pygame.sprite.Sprite):
     def  __init__(self, width, height, x, y):
         pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface([width,height])
-        #self.image.fill(color)
-
         self.image = pygame.image.load("Hankk_the_dino.png").convert()
         self.x = x
         self.y = y
 #self.rect determines the location stored for the computer to know where you are
-        self.rect = pygame.Rect(self.x, self.y, 80, 84)
+        self.rect = pygame.Rect(self.x, self.y, 90, 84)
         self.height = 0
         self.reach = True
 
-        self.image.set_colorkey(white)
-        screen.blit(self.image, [x, y])
 
     def jump(self):
         if not self.reach:
@@ -157,7 +147,7 @@ cac_list = pygame.sprite.Group()
 def makecactusgroup():
     for i in range(5):
         xval = 1280 + random.randrange(700)
-        cac = Cactus(100, 160, xval, 420)
+        cac = Cactus(100, 160, xval, 460)
     #    Cactus(117, 160, cac.rect.x, cac.rect.y)
 
         cac_list.add(cac)
@@ -193,16 +183,14 @@ def rungame():
         dino.fall()
 #Resets the screen so that it can be updated with the drawings for every loop
         screen.fill(white)
-        background_image = pygame.image.load("Mountain_desert.png")
-
         screen.blit(background_image, [0,0])
-        text1 = font.render("Dino Dash", True, white)
         screen.blit(text1, [401, 40])
-        pygame.display.flip()
+
 #Draws a green, 20x20 cactus in its previously determined x and y position for every cactus in cac_list
+#Previous note was before images were inserted - now just updates and shows the cacti 
         for cac in cac_list:
-            #pygame.draw.rect(screen,GREEN,[cac.rect.x,cac.rect.y,20,20])
-            Cactus(10, 100, cac.rect.x, cac.rect.y)
+            cac.image.set_colorkey(white)
+            screen.blit(cac.image, [cac.rect.x, cac.rect.y])
 
 #Prevents cacti from being too close together. Each cactus goes through
 #the cacxval list and compares its x coordinate with the others to see if they are
@@ -220,9 +208,10 @@ def rungame():
                 cac.rect.x = 1280 + random.randrange(700)
 #empties the cacxval list so that old cacti that have been reset are not considered
         cacxval = []
-#draws the dinosaur
-        #pygame.draw.rect(screen,BLUE,[dino.rect.x,dino.rect.y,20,20])
-        Dino(90, 84, dino.rect.x, dino.rect.y)
+#draws the dinosaur by calling the image and based on position stated in class
+        dino.image.set_colorkey(white)
+        screen.blit(dino.image, [dino.rect.x, dino.rect.y])
+
 #makes a list that is added to everytime the dino collides with a cactus
         cac_hit_list = pygame.sprite.spritecollide(dino,cac_list,True)
 #if the collision list has something in it, (thus there was a collision),
