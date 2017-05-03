@@ -34,6 +34,7 @@ screen.blit(text1, [401, 40])
 
 pygame.mixer.music.load('gameoverzelda.midi')
 pygame.mixer.music.play(-1)
+jumpsound = pygame.mixer.Sound("jump05.wav")
 
 def text_objects(text, font):
     textSurface = font.render(text, True, BLACK)
@@ -140,6 +141,7 @@ def rungame():
                 done = True
                 return True
             elif event.type == pygame.KEYDOWN:  #Allows the player to jump if they press up and if they are on the ground
+                jumpsound.play()
                 if event.key == pygame.K_UP and dino.rect.y == 460:
                     dino.reach = False
         dino.jump()
