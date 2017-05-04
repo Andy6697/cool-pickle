@@ -14,7 +14,7 @@ class Dino(pygame.sprite.Sprite):
         self.image = pygame.image.load("Hankk_the_dino.png").convert()
         self.x = x
         self.y = y
-        self.rect = pygame.Rect(self.x, self.y, 60, 84)
+        self.rect = pygame.Rect(self.x, self.y, 70, 84)
         self.height = 0
         self.reach = True
 
