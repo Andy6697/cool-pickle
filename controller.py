@@ -17,12 +17,10 @@ class Controller():
         BRIGHT_GREEN = (0,255,0)
 
         #Sets up the screen
-        SPEED_FACTOR = 1.1
-        display_width = 1280
-        display_height = 809
-        size = (display_width, display_height)
+        DISPLAY_WIDTH = 1280
+        DISPLAY_HEIGHT = 809
+        size = (DISPLAY_WIDTH, DISPLAY_HEIGHT)
         screen = pygame.display.set_mode(size)
-        screen.fill(WHITE)
 
         dino = Dino(90, 84, 0, 460)
 
@@ -36,9 +34,7 @@ class Controller():
 
         intro = True
         background_image = pygame.image.load("Mountain_desert.png")
-        screen.blit(background_image, [0,0])
-        text1 = font.render("Dino Dash", True, WHITE)
-        screen.blit(text1, [401, 40])
+        titletext = font.render("Dino Dash", True, WHITE)
 
         pygame.mixer.music.load('gameoverzelda.midi')
         pygame.mixer.music.play(-1)
@@ -52,7 +48,7 @@ class Controller():
             """displays whatever message is written to the screen"""
             largeText = pygame.font.Font('freesansbold.ttf',115)
             TextSurf, TextRect = text_objects(text, largeText)
-            TextRect.center = ((display_width/2),(display_height/2))
+            TextRect.center = ((DISPLAY_WIDTH/2),(DISPLAY_HEIGHT/2))
             screen.blit(TextSurf, TextRect)
 
             pygame.display.update()
@@ -103,7 +99,7 @@ class Controller():
                 screen.fill(WHITE)
                 largeText = pygame.font.Font('freesansbold.ttf',115)
                 TextSurf, TextRect = text_objects("Dino Dash", largeText)
-                TextRect.center = ((display_width/2),(display_height/2))
+                TextRect.center = ((DISPLAY_WIDTH/2),(DISPLAY_HEIGHT/2))
                 screen.blit(TextSurf, TextRect)
 
 
@@ -114,16 +110,12 @@ class Controller():
                 pygame.display.update()
                 clock.tick(15)
 
-        #Sets up a group to control all cacti. Cac_list has all of the cacti in it.
-
         def makecactusgroup():
             """Creates 5 cacti with the Cactus class and adds them to the Cac_list"""
             for i in range(5):
                 xval = 1280 + random.randrange(700)
                 cac = Cactus(100, 160, xval, 460)
                 cac_list.add(cac)
-        #Creates a dinosaur with the Dino class and sets its initial positions
-
 
         def rungame():
             """This will be looped within the main function to have the game run."""
@@ -131,7 +123,6 @@ class Controller():
             highscoreread = open("high.json","r")
             highscoredict = json.load(highscoreread)
             highscore = highscoredict['1']
-            #highscore = int(highscoreread.read())
             highscoreread.close()
             initialtime = pygame.time.get_ticks()
             pygame.sprite.Group.empty(cac_list)
@@ -141,30 +132,34 @@ class Controller():
             score = 0
             done = False
             cacxval = []
-            for cac in cac_list:
+            for cac in cac_list:    #Records x values of all 5 cacti in a list
                 cacxval.append(cac.rect.x)
 
             while not done:
                 for event in pygame.event.get():
-                    if event.type == pygame.QUIT:   #Allows the loop to end and returns True to main() if the player clicks the X
+                    if event.type == pygame.QUIT:   #Allows the loop to end and returns True to mainloop() if the player clicks the X
                         done = True
                         return True
-                    elif event.type == pygame.KEYDOWN:  #Allows the player to jump if they press up and if they are on the ground
+                    elif event.type == pygame.KEYDOWN:  #Allows the player to jump if they press up or space and if they are on the ground
                         if event.key == pygame.K_UP and dino.rect.y == 460:
                             dino.reach = False
                             jumpsound.play()
+                        if event.key == pygame.K_SPACE and dino.rect.y == 460:
+                            dino.reach = False
+                            jumpsound.play()
+
                 dino.jump()
                 dino.fall()
                 screen.fill(WHITE)
                 screen.blit(background_image, [0,0])
-                screen.blit(text1, [401, 40])
+                screen.blit(titletext, [401, 40])
 
                 for cac in cac_list:
                     cacxval.remove(cac.rect.x)
-                    if cac.rect.x < -20:
-                        cac.rect.x = 1280 + random.randrange(500)
-                    for xval in cacxval:
-                            while abs(cac.rect.x - xval) <= (25 * speed) and cac.rect.x > 1280 :
+                    if cac.rect.x < -20:    #Resets position once cacti reaches the end of the screen
+                        cac.rect.x = DISPLAY_WIDTH + random.randrange(500)
+                    for xval in cacxval:    #Makes sure each cactus is not too close to another cactus
+                            while abs(cac.rect.x - xval) <= (25 * speed) and cac.rect.x > DISPLAY_WIDTH:    #Increases separation with increased speed and only while off-screen.
                                     cac.rect.x += 100 + (25 * speed)
                     cac.rect.x -= speed
                     cac.image.set_colorkey(WHITE)
@@ -173,19 +168,16 @@ class Controller():
                 dino.image.set_colorkey(WHITE)  #displays the dino image based on its current position
                 screen.blit(dino.image, [dino.rect.x, dino.rect.y])
                 cac_hit_list = pygame.sprite.spritecollide(dino,cac_list,True)
-
                 if len(cac_hit_list) > 0:   #Checks if there is a collision and if the high score was beat and updates accordingly. Then exits the while loop.
                     if score > highscore:
                         highscorewrite = open("high.json","w")
                         highscoredict['1'] = score
                         json.dump(highscoredict,highscorewrite)
-                        #highscorewrite.write(str(score))
                         highscorewrite.close()
                     done = True
-                    continue
                 score = (pygame.time.get_ticks()-initialtime)//100    #Makes a score based on time
-                if level < (score / 50): #Increases speed of cacti every time the score goes up 25
-                    speed += 1
+                if level < (score / 50): #Increases speed of cacti every time the score increases by 50
+                    speed += 2
                     level += 1
                 text = font.render("Score: " + str(score),True,BLACK)
                 highscoretext = font.render("High Score: " + str(highscore),True, BLACK)
@@ -223,4 +215,3 @@ def main():
     Controller()
 
 main()
-
