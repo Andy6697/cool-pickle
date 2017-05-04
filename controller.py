@@ -27,6 +27,7 @@ fontgameover = pygame.font.SysFont('Calibri', 50, True, False)
 gameovertext = fontgameover.render("GAME OVER! PRESS LEFT TO RESTART OR DOWN TO QUIT",True,BLACK)
 pygame.display.set_caption("Dino Dash")
 
+intro = True
 background_image = pygame.image.load("Mountain_desert.png")
 screen.blit(background_image, [0,0])
 text1 = font.render("Dino Dash", True, WHITE)
@@ -78,8 +79,6 @@ def quitgame():
     pygame.quit()
     quit()
 
-intro = True
-
 def end_intro():
     """exits the menu display"""
     global intro
@@ -90,7 +89,6 @@ def game_intro():
     also enters into the game itself, and exit menu screen as well as a quit button to exit pygame completely"""
     while intro:
         for event in pygame.event.get():
-            print(event)
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
@@ -130,40 +128,45 @@ def rungame():
     initialtime = pygame.time.get_ticks()
     pygame.sprite.Group.empty(cac_list)
     makecactusgroup()
-    cacxval = []
-    speed = 15
+    speed = 12
     level = 1
     score = 0
     done = False
+    cacxval = []
+    for cac in cac_list:
+        cacxval.append(cac.rect.x)
+    cacxval.sort()
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:   #Allows the loop to end and returns True to main() if the player clicks the X
                 done = True
                 return True
             elif event.type == pygame.KEYDOWN:  #Allows the player to jump if they press up and if they are on the ground
-                jumpsound.play()
                 if event.key == pygame.K_UP and dino.rect.y == 460:
                     dino.reach = False
+                    jumpsound.play()
         dino.jump()
         dino.fall()
         screen.fill(WHITE)
         screen.blit(background_image, [0,0])
         screen.blit(text1, [401, 40])
-        pygame.display.flip()
-        for cac in cac_list: #controls the movements and display of cactus images for every cactus object
+
+        for cac in cac_list:
+            cacxval.remove(cac.rect.x)
+            if cac.rect.x < -20:
+                cac.rect.x = cacxval[-1] + (25 * speed) + random.randrange(100)
+            for xval in cacxval:
+                    while abs(cac.rect.x - xval) <= (25 * speed) and cac.rect.x > 1280 :
+                            cac.rect.x += 100 + (25 * speed)  
+            cac.rect.x -= speed
             cac.image.set_colorkey(WHITE)
             screen.blit(cac.image, [cac.rect.x, cac.rect.y])
-            for xval in cacxval: #prevents cacti from being within 350 pixels of each other
-                while abs(cac.rect.x - xval) <=350:
-                    cac.rect.x += 25
-            cacxval += [cac.rect.x]
-            cac.rect.x -= speed 
-            if cac.rect.x < -100:   #resets cacti after reaching the end of the screen
-                cac.rect.x = 1280 + random.randrange(700)
-        cacxval = []
+            cacxval.append(cac.rect.x)
+            cacxval.sort()
         dino.image.set_colorkey(WHITE)  #displays the dino image based on its current position
         screen.blit(dino.image, [dino.rect.x, dino.rect.y])
         cac_hit_list = pygame.sprite.spritecollide(dino,cac_list,True)
+
         if len(cac_hit_list) > 0:   #Checks if there is a collision and if the high score was beat and updates accordingly. Then exits the while loop.
             if score > highscore:
                 highscorewrite = open("highscore.txt","w")
@@ -172,8 +175,8 @@ def rungame():
             done = True
             continue
         score = (pygame.time.get_ticks()-initialtime)//100    #Makes a score based on time
-        if level < (score / 25): #Increases speed of cacti every time the score goes up 25
-            speed *= SPEED_FACTOR
+        if level < (score / 50): #Increases speed of cacti every time the score goes up 25
+            speed += 1
             level += 1
         text = font.render("Score: " + str(score),True,BLACK)
         highscoretext = font.render("High Score: " + str(highscore),True, BLACK)
