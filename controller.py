@@ -97,6 +97,7 @@ class Controller():
                         quit()
 
                 screen.fill(WHITE)
+                screen.blit(background_image, [0, 0])
                 largeText = pygame.font.Font('freesansbold.ttf',115)
                 TextSurf, TextRect = text_objects("Dino Dash", largeText)
                 TextRect.center = ((DISPLAY_WIDTH/2),(DISPLAY_HEIGHT/2))
