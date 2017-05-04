@@ -123,7 +123,7 @@ class Controller():
         #Prepares scores, cac_list, time, speed, etc every time game restarts
             highscoreread = open("high.json","r")
             highscoredict = json.load(highscoreread)
-            highscore = highscoredict['1']
+            highscore = highscoredict['highscore']
             highscoreread.close()
             initialtime = pygame.time.get_ticks()
             pygame.sprite.Group.empty(cac_list)
@@ -172,7 +172,7 @@ class Controller():
                 if len(cac_hit_list) > 0:   #Checks if there is a collision and if the high score was beat and updates accordingly. Then exits the while loop.
                     if score > highscore:
                         highscorewrite = open("high.json","w")
-                        highscoredict['1'] = score
+                        highscoredict['highscore'] = score
                         json.dump(highscoredict,highscorewrite)
                         highscorewrite.close()
                     done = True
@@ -188,6 +188,7 @@ class Controller():
                 clock.tick(30)
 
         def mainloop():
+            """This allows the game to run, then enter a gameover mode, which lets the player replay the game or quit"""
             game_intro()
             closegame = False
             while closegame == False: #Loops through the rungame function until closegame == True
