@@ -41,40 +41,51 @@ class Controller():
         jumpsound = pygame.mixer.Sound("jump05.wav")
 
         def text_objects(text, font):
+            #in order for message display fn to work
             textSurface = font.render(text, True, BLACK)
+            #3 parameters, render text, anti-alising(?), determine color of font = black
             return textSurface, textSurface.get_rect()
+            #rectangle of text to position our text
 
         def message_display(text):
             """displays whatever message is written to the screen"""
             largeText = pygame.font.Font('freesansbold.ttf',115)
             TextSurf, TextRect = text_objects(text, largeText)
             TextRect.center = ((DISPLAY_WIDTH/2),(DISPLAY_HEIGHT/2))
+            #center the text within display width and display height
             screen.blit(TextSurf, TextRect)
 
             pygame.display.update()
+            #update display 
 
-            time.sleep(2)   #it pauses the game for 2 seconds
+            time.sleep(2)   #it sleeps the game after 2 seconds, and next line of code starts the game, reset
 
             rungame()
 
         def button(msg,x,y,w,h,ic,ac,action=None):
             """creates the button's functionality, and keeps track of the mouse position and click, to react like its an actual button"""
             mouse = pygame.mouse.get_pos()
+            #get position of mouse
             click = pygame.mouse.get_pressed()
+            #recgonize click from mouse 
 
-
+            #tinkers with the brightness of the color, keep track of mouse movement and recognizes click
             if x+w > mouse[0] > x and y+h > mouse[1] > y:
-                pygame.draw.rect(screen, ac,(x,y,w,h))       
+            #checks location of mouse
+                pygame.draw.rect(screen, ac,(x,y,w,h))
+            #makes the color brighter if it is within the boundary, ac means active color
             else:
                 pygame.draw.rect(screen, ic, (x,y,w,h))
-
+            #color remains the same if it is not within the boundary, ic means inactive color 
             if click[0] == 1 and (x+w > mouse[0] > x and y+h > mouse[1] > y) and action != None:
                 action()
+            #if there is an action
 
-
+            #create the surface and rectangle text for buttons
             smallText = pygame.font.Font("freesansbold.ttf",20)
             textSurf, textRect = text_objects(msg,smallText)
             textRect.center = ( x+(w/2)), (y+(h/2))
+            #center x and y for the the text
             screen.blit(textSurf, textRect)
 
         def quitgame():
