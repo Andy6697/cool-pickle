@@ -7,7 +7,7 @@ from model import *
 class Controller():
     def __init__(self):
         pygame.init()
-        #All colors listed to be used for drawing
+        #All colors listed to be used for drawing using RGB method
         BLACK = (0,0,0)
         WHITE = (255,255,255)
         GREEN = (0,200,0)
@@ -92,12 +92,16 @@ class Controller():
             also enters into the game itself, and exit menu screen as well as a quit button to exit pygame completely"""
             while intro:
                 for event in pygame.event.get():
+                    #creates a list of events that happen 
                     if event.type == pygame.QUIT:
                         pygame.quit()
+                        #stop pygame from running
                         quit()
 
                 screen.fill(WHITE)
+                #make the screen white
                 screen.blit(background_image, [0, 0])
+                #puts the background image
                 largeText = pygame.font.Font('freesansbold.ttf',115)
                 TextSurf, TextRect = text_objects("Dino Dash", largeText)
                 TextRect.center = ((DISPLAY_WIDTH/2),(DISPLAY_HEIGHT/2))
@@ -109,7 +113,9 @@ class Controller():
 
 
                 pygame.display.update()
+                #updates the screen surface
                 clock.tick(15)
+                #frames per second setting 
 
         def makecactusgroup():
             """Creates 5 cacti with the Cactus class and adds them to the Cac_list"""
